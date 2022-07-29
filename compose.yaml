@@ -1,0 +1,10 @@
+version: '3'
+services:
+  embulk:
+    build: .
+    platform: linux/amd64
+    volumes:
+      - ./data:/data
+      - ./config:/config
+    entrypoint: [ "java", "-jar", "/opt/embulk/bin/embulk" ]
+    command: [ "preview", "/config/embulk.yaml" ]

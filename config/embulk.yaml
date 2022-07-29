@@ -1,0 +1,22 @@
+in:
+  type: file
+  path_prefix: /data
+  decoders:
+    - type: commons-compress
+      format: zip
+      match_name: "^[^/]+/.*\\.json$"
+  parser:
+    type: jsonpath
+    flatten_json_array: true
+    columns:
+      - { name: user_real_name, type: string, path: "user_profile.real_name" }
+      - { name: ts, type: double }
+      - { name: timestamp, type: timestamp, path: ts }
+      - { name: text, type: string }
+      - { name: reactions, type: json }
+filters:
+  - type: timestamp_format
+    columns:
+      - { name: ts, type: timestamp }
+out:
+  type: stdout
