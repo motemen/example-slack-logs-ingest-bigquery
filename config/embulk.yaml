@@ -1,22 +1,49 @@
 in:
-  type: file
-  path_prefix: /data
-  decoders:
-    - type: commons-compress
-      format: zip
-      match_name: "^[^/]+/.*\\.json$"
+  # type: file
+  # path_prefix: /data
+  # decoders:
+  #   - type: commons-compress
+  #     format: zip
+  #     match_name: "^[^/]+/.*\\.json$"
+  type: command
+  command: |
+    set -e
+    for zip in /data/*.zip; do
+      json_dir="/tmp/$(basename "$zip")"
+      unzip -o -q "$zip" -d "$json_dir"
+      for file in "$json_dir"/*/*.json; do
+        ch=$(basename "$(dirname "$file")")
+        jq --arg ch "$ch" 'map(. + {channel: $ch})' < "$file"
+      done
+    done
   parser:
     type: jsonpath
     flatten_json_array: true
     columns:
-      - { name: user_real_name, type: string, path: "user_profile.real_name" }
-      - { name: ts, type: double }
-      - { name: timestamp, type: timestamp, path: ts }
+      - { name: ts, type: string }
+      - { name: timestamp, type: double, path: ts }
+      - { name: subtype, type: string }
+      - { name: channel, type: string }
+      - {
+          name: user_display_name,
+          type: string,
+          path: "user_profile.display_name",
+        }
       - { name: text, type: string }
       - { name: reactions, type: json }
+  # parser:
+  #   type: json
+  #   flatten_json_array: true
+  #   root: /messages
+  #   columns:
+  #     - { name: user_real_name, type: string, path: "user_profile.real_name" }
+  #     - { name: ts, type: string }
+  #     - { name: timestamp, type: double, path: ts }
+  #     - { name: text, type: string }
+  #     - { name: reactions, type: json }
 filters:
   - type: timestamp_format
     columns:
-      - { name: ts, type: timestamp }
+      - { name: timestamp, type: timestamp }
 out:
   type: stdout
