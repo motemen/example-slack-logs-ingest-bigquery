@@ -5,9 +5,10 @@ services:
     volumes:
       - ./data:/data
       - ./config:/config
+      - ./keys:/keys
     command:
       [
         "/bin/bash",
         "-c",
-        "/opt/embulk/bin/embulk preview /config/embulk.yaml"
+        "embulk preview /config/embulk.yml.liquid"
       ]
