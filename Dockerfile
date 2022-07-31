@@ -28,5 +28,3 @@ RUN <<__INSTALL_TOOLS__
 apt-get update
 apt-get install -yq jq unzip
 __INSTALL_TOOLS__
-
-COPY docker-entrypoint.sh /docker-entrypoint.sh

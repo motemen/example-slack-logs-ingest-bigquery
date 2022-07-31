@@ -1,18 +1,6 @@
 in:
-  # type: file
-  # path_prefix: {{ env.PREPROCESSED_JSON_DIR }}/
   type: command
-  command: |
-    set -e
-    for zip in /data/*.zip; do
-      echo "# Unzipping $zip ..." >&2
-      json_dir="/tmp/$(basename "$zip")"
-      unzip -o -q "$zip" -d "$json_dir"
-      for file in "$json_dir"/*/*.json; do
-        ch=$(basename "$(dirname "$file")")
-        cat "$file" | jq -c --arg ch "$ch" 'map(. + {channel: $ch}) | .[]'
-      done
-    done
+  command: bash /config/unzip-extract.sh
   parser:
     type: json
     columns:

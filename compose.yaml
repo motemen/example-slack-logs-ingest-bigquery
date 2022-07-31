@@ -6,7 +6,6 @@ services:
       - ./data:/data
       - ./config:/config
       - ./keys:/keys
-      - ./docker-entrypoint.sh:/docker-entrypoint.sh
     command:
       [
         "/bin/bash",
