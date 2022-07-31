@@ -11,16 +11,6 @@ in:
       - { name: user_name, type: string, element_at: /user_profile/name }
       - { name: text, type: string }
       - { name: reactions, type: json }
-  # parser:
-  #   type: json
-  #   flatten_json_array: true
-  #   root: /messages
-  #   columns:
-  #     - { name: user_real_name, type: string, path: "user_profile.real_name" }
-  #     - { name: ts, type: string }
-  #     - { name: timestamp, type: double, path: ts }
-  #     - { name: text, type: string }
-  #     - { name: reactions, type: json }
 filters:
   - type: timestamp_format
     columns:

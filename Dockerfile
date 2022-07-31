@@ -15,8 +15,6 @@ __EMBULK_BIN__
 # for jwt:2.3.0, see https://github.com/embulk/embulk-output-bigquery/issues/144
 RUN <<__PLUGINS__
 embulk gem install \
-	embulk-decoder-commons-compress:0.5.0 \
-	embulk-parser-jsonpath:0.4.0 \
 	embulk-filter-timestamp_format:0.3.3 \
 	embulk-input-command:0.1.4 \
 	embulk-filter-null_string:0.1.0 \
