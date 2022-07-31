@@ -1,33 +1,26 @@
 in:
-  type: file
-  path_prefix: {{ env.PREPROCESSED_JSON_DIR }}/
-  # type: command
-  # command: |
-  #   set -e
-  #   for zip in /data/*.zip; do
-  #     json_dir="/tmp/$(basename "$zip")"
-  #     unzip -o -q "$zip" -d "$json_dir"
-  #     for file in "$json_dir"/*/*.json; do
-  #       echo "$file" >&2
-  #       ch=$(basename "$(dirname "$file")")
-  #       echo "jq" >&2
-  #       cat "$file" | jq -c --arg ch "$ch" 'map(. + {channel: $ch})'
-  #       echo "jq--" >&2
-  #     done
-  #   done
+  # type: file
+  # path_prefix: {{ env.PREPROCESSED_JSON_DIR }}/
+  type: command
+  command: |
+    set -e
+    for zip in /data/*.zip; do
+      echo "# Unzipping $zip ..." >&2
+      json_dir="/tmp/$(basename "$zip")"
+      unzip -o -q "$zip" -d "$json_dir"
+      for file in "$json_dir"/*/*.json; do
+        ch=$(basename "$(dirname "$file")")
+        cat "$file" | jq -c --arg ch "$ch" 'map(. + {channel: $ch}) | .[]'
+      done
+    done
   parser:
-    type: jsonpath
-    flatten_json_array: true
+    type: json
     columns:
       - { name: ts, type: string }
-      - { name: timestamp, type: double, path: ts }
+      - { name: timestamp, type: double, element_at: /ts }
       - { name: subtype, type: string }
       - { name: channel, type: string }
-      - {
-          name: user_display_name,
-          type: string,
-          path: "user_profile.display_name",
-        }
+      - { name: user_name, type: string, element_at: /user_profile/name }
       - { name: text, type: string }
       - { name: reactions, type: json }
   # parser:
@@ -44,9 +37,9 @@ filters:
   - type: timestamp_format
     columns:
       - { name: timestamp, type: timestamp }
-out:
-  type: file
-  path_prefix: /data/test_out/test_out
-  file_ext: csv
-  formatter:
-    type: csv
+  - type: null_string
+    columns:
+      - { name: subtype, null_string: "" }
+      - { name: user_name, null_string: "" }
+      - { name: reactions, null_string: "" }
+{% include "out" %}

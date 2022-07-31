@@ -19,6 +19,7 @@ embulk gem install \
 	embulk-parser-jsonpath:0.4.0 \
 	embulk-filter-timestamp_format:0.3.3 \
 	embulk-input-command:0.1.4 \
+	embulk-filter-null_string:0.1.0 \
 	jwt:2.3.0 \
 	embulk-output-bigquery:0.6.7
 __PLUGINS__
