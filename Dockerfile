@@ -12,14 +12,16 @@ curl --create-dirs -o /opt/embulk/bin/embulk -L "https://dl.embulk.org/embulk-$E
 chmod +x /opt/embulk/bin/embulk
 __EMBULK_BIN__
 
-# for jwt:2.3.0, see https://github.com/embulk/embulk-output-bigquery/issues/144
+# for jwt:2.3.0 etc, see https://github.com/embulk/embulk-output-bigquery/issues/144
 RUN <<__PLUGINS__
 embulk gem install \
 	embulk-filter-timestamp_format:0.3.3 \
 	embulk-input-command:0.1.4 \
 	embulk-filter-null_string:0.1.0 \
 	jwt:2.3.0 \
-	embulk-output-bigquery:0.6.7
+	public_suffix:4.0.7 \
+	embulk-output-bigquery:0.6.7 &&
+embulk gem list | grep embulk-output-bigquery
 __PLUGINS__
 
 RUN <<__INSTALL_TOOLS__
