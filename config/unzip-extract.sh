@@ -12,7 +12,7 @@ for zip in /data/*.zip; do
     /bin/echo -n "--> $ch " >&2
     for file in "$channel_dir"/*.json; do
         /bin/echo -n "." >&2
-        jq -c --arg ch "$ch" 'map(. + {channel: $ch}) | .[]' "$file"
+        jq -c --arg ch "$ch" 'map(. + {channel: $ch}) | .[] | select(.ts)' "$file"
     done
     /bin/echo >&2
   done
