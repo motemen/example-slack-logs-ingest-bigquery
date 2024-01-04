@@ -20,6 +20,7 @@ embulk gem install \
 	embulk-filter-null_string:0.1.0 \
 	jwt:2.3.0 \
 	public_suffix:4.0.7 \
+	mini_mime:1.1.2 \
 	embulk-output-bigquery:0.6.7 &&
 embulk gem list | grep embulk-output-bigquery
 __PLUGINS__
